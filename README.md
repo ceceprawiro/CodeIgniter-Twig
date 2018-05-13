@@ -4,6 +4,28 @@ Twig - Twig template engine implementation for CodeIgniter
 Twig template engine implementation for CodeIgniter.
 Modified from [codeigniter-twiggy](https://github.com/edmundask/codeigniter-twiggy).
 
+# Installation
+
+Download Twig
+
+```
+composer req twig/twig
+```
+
+Download this package and extract to `application/third_party`.
+
+Open file `application/config/autoload.php` and load this package.
+
+```
+$autoload['packages'] = array(APPPATH.'third_party/Twig');
+```
+
+Load the library.
+
+```
+$autoload['libraries'] = array('twig'');
+```
+
 # How To Use It
 
 ## 1. Set up dir structure
