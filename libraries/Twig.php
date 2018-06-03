@@ -55,18 +55,6 @@ class Twig {
 
         // Setup default theme
         $this->setTheme();
-
-        // Register default globals
-        $this->registerGlobals();
-
-        // Register default filters
-        $this->registerFilters();
-
-        // Register default functions
-        $this->registerFunctions();
-
-        // Setup syntax delimiters
-        $this->setSyntaxDelimiters();
     }
 
     /**
@@ -110,6 +98,50 @@ class Twig {
     }
 
     /**
+     * Register all globals
+     */
+    private function registerGlobals() {
+        foreach ($this->config['globals'] as $key => $value) {
+            $this->twig->addGlobal($key, $value);
+        }
+    }
+
+    /**
+     * Reegister all filters
+     *
+     * @return void
+     */
+    private function registerFilters() {
+        $options = [];
+        foreach ($this->config['filters'] as $filter) {
+            $twigFilter = new Twig_Filter($filter, $filter);
+            $this->twig->addFilter($twigFilter);
+        }
+    }
+
+    /**
+     * Register all functions
+     *
+     * @return void
+     */
+    private function registerFunctions() {
+        $options = [];
+        foreach ($this->config['functions'] as $function) {
+            $twigFunction = new Twig_Function($function, $function);
+            $this->twig->addFunction($twigFunction, $options);
+        }
+    }
+
+    /**
+     * Set syntax delimiters
+     *
+     * @return void
+     */
+    private function setSyntaxDelimiters() {
+        $this->twig->setLexer(new Twig_Lexer($this->twig, $this->config['delimiters']));
+    }
+
+    /**
      * Initialize Twig Environment
      *
      * @param array $locations Template locations
@@ -140,6 +172,18 @@ class Twig {
 
             exit;
         }
+
+        // Register default globals
+        $this->registerGlobals();
+
+        // Register default filters
+        $this->registerFilters();
+
+        // Register default functions
+        $this->registerFunctions();
+
+        // Setup syntax delimiters
+        $this->setSyntaxDelimiters();
     }
 
     /**
@@ -165,48 +209,6 @@ class Twig {
     }
 
     /**
-     * Register all globals
-     */
-    private function registerGlobals() {
-        foreach ($this->config['globals'] as $key => $value) {
-            $this->twig->addGlobal($key, $value);
-        }
-    }
-
-    /**
-     * Reegister all filters
-     *
-     * @return void
-     */
-    private function registerFilters() {
-        foreach ($this->config['filters'] as $filter) {
-            $twigFilter = new Twig_Filter($filter, $filter);
-            $this->twig->addFilter($twigFilter);
-        }
-    }
-
-    /**
-     * Register all functions
-     *
-     * @return void
-     */
-    private function registerFunctions() {
-        foreach ($this->config['functions'] as $function) {
-            $twigFunction = new Twig_Function($function, $function);
-            $this->twig->addFunction($twigFunction);
-        }
-    }
-
-    /**
-     * Set syntax delimiters
-     *
-     * @return void
-     */
-    private function setSyntaxDelimiters() {
-        $this->twig->setLexer(new Twig_Lexer($this->twig, $this->config['delimiters']));
-    }
-
-    /**
      * Render template
      *
      * @param  string         $template Template to render
@@ -229,7 +231,7 @@ class Twig {
      */
     public function display($template, $data = []) {
         $template = $this->twig->load("{$template}.{$this->config['extension']}");
-        $template->display();
+        $template->display($data);
     }
 
 }
